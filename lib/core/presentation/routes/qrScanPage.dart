@@ -41,7 +41,7 @@ class _QRScanPageState extends State<QRScanPage> {
           width: double.infinity,
           child: Column(
             children: [
-             // Expanded(child: _qrScanner()),
+             Expanded(child: _qrScanner()),
               Expanded(child: _list())
             ],
           ),
