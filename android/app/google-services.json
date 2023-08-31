@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "523157331508",
+    "project_id": "savetime-4f221",
+    "storage_bucket": "savetime-4f221.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:523157331508:android:0e6e3ecb59b65fc9aa3461",
+        "android_client_info": {
+          "package_name": "com.pro.savetime.savetime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "523157331508-h490ib0ct4rl835stpct0t1v1lodr9j9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_8U0rX_aT-LZZt62B9AlB__tFMtgU-dw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "523157331508-h490ib0ct4rl835stpct0t1v1lodr9j9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
