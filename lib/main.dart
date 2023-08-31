@@ -1,17 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:savetime/core/presentation/routes/mainpage.dart';
 import 'package:savetime/core/presentation/routes/splash.dart';
 
-import 'firebase_options.dart';
+import 'core/presentation/routes/qrScanPage.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
   runApp(const MyApp());
 }
 
@@ -34,7 +28,8 @@ class MyApp extends StatelessWidget {
       initialRoute: SplashScreen.routeName,
       routes: {
         SplashScreen.routeName:(context)=>const SplashScreen(),
-        MainPage.routeName:(context)=>const MainPage()
+        MainPage.routeName:(context)=>const MainPage(),
+        QRScanPage.routeName:(context)=>const QRScanPage()
       },
     );
   }

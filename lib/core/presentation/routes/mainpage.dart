@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:savetime/core/presentation/routes/qrScanPage.dart';
 
 class MainPage extends StatefulWidget {
   static const routeName = "/main";
@@ -14,6 +15,13 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(onPressed: (){
+              Navigator.pushNamed(context, QRScanPage.routeName);
+          }, icon: const Icon(Icons.qr_code))
+        ],
+      ),
       body: widgetList[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -42,9 +50,7 @@ class QRListPage extends StatefulWidget {
 class _QRListPageState extends State<QRListPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Text("List"),
-    );
+    return Container();
   }
 }
 
