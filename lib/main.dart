@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:savetime/config.dart';
 import 'package:savetime/core/presentation/routes/mainpage.dart';
 import 'package:savetime/core/presentation/routes/splash.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/presentation/routes/qrScanPage.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  Supabase.initialize(url: supabaseUrl, anonKey: supabaseSecretKey);
   runApp(const MyApp());
 }
 
