@@ -12,8 +12,8 @@ class QRScanPage extends StatefulWidget {
 class _QRScanPageState extends State<QRScanPage> {
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode? result;
   QRViewController? qrController;
+  List<String> qrData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,7 @@ class _QRScanPageState extends State<QRScanPage> {
         title: const Text("Scan QR codes"),
       ),
       body: Container(
+        padding: const EdgeInsets.all(20),
         height: double.infinity,
         width: double.infinity,
         child: Column(
@@ -38,23 +39,41 @@ class _QRScanPageState extends State<QRScanPage> {
   void _onQRViewCreated(QRViewController controller) {
     qrController = controller;
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
+      if(scanData.code!=null){
+        setState(() {
+          qrData.add(scanData.code!);
+        });
+      }
     });
   }
 
   Widget _qrScanner(){
     return Container(
+      color: Colors.black,
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: QRView(
         key: qrKey,
         onQRViewCreated: _onQRViewCreated
-
       ),
     );
   }
   Widget _list(){
-    return ListView();
+    return ListView.builder(
+        itemCount: qrData.length,
+        itemBuilder: (context,index)=>Container(
+          margin: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Expanded(child: TextFormField()),
+              Expanded(child: Text(qrData[index])),
+              Expanded(child: IconButton(onPressed: (){
+                  setState(() {
+                    qrData.removeAt(index);
+                  });
+              },icon: const Icon(Icons.delete),)),
+            ],
+          ),
+        ));
   }
 }
