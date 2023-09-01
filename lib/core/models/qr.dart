@@ -5,17 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 class QRModel {
   String qrData;
   String tag;
-
+  DateTime dateTime;
   QRModel({
     required this.qrData,
-    required this.tag
+    required this.tag,
+    required this.dateTime
   });
 
   String toJsonString() {
     return jsonEncode({
       {
         "qrData": qrData,
-        "tag": tag
+        "tag": tag,
+        "datetime":dateTime.toString()
       }
     });
   }
@@ -23,7 +25,7 @@ class QRModel {
   factory QRModel.fromJsonString(String json){
     Map data = jsonDecode(json);
     if (data.keys.contains("qrData") && data.keys.contains("tag")) {
-      return QRModel(qrData: data["qrData"], tag: data["tag"]);
+      return QRModel(qrData: data["qrData"], tag: data["tag"],dateTime: DateTime.parse(data["datetime"]));
     }
     else {
       throw ArgumentError("Wrong Json");

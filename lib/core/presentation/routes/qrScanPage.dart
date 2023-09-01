@@ -21,6 +21,7 @@ class _QRScanPageState extends State<QRScanPage> {
   ScrollController listScrollController = ScrollController();
   List<TextEditingController> textControllers =[];
   List<String> qrData = [];
+  List<String> dateTimeData = [];
   @override
   void initState() {
     super.initState();
@@ -61,7 +62,7 @@ class _QRScanPageState extends State<QRScanPage> {
   void _save(){
     List<String> qrJson = [];
     for(int i = 0;i<qrData.length;i++){
-      qrJson.add(jsonEncode({"tag":textControllers[i].text,"qrData":qrData[i]}));
+      qrJson.add(jsonEncode({"tag":textControllers[i].text,"qrData":qrData[i],"datetime":dateTimeData[i]}));
     }
     QRModel.saveToCache(qrJson);
     Navigator.pop(context);
@@ -76,6 +77,7 @@ class _QRScanPageState extends State<QRScanPage> {
           setState(() {
             qrData.add(scanData.code!);
             textControllers.add(TextEditingController());
+            dateTimeData.add(DateTime.now().toString());
             listScrollController.animateTo(
               listScrollController.position.maxScrollExtent,
               duration: const Duration(seconds: 2),
