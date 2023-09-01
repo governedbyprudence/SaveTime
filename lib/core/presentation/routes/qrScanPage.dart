@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:savetime/core/utils/sharedPreferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/qr.dart';
 
 class QRScanPage extends StatefulWidget {
   static const routeName = "/qrScan";
@@ -10,12 +16,15 @@ class QRScanPage extends StatefulWidget {
 }
 
 class _QRScanPageState extends State<QRScanPage> {
-
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? qrController;
   ScrollController listScrollController = ScrollController();
   List<TextEditingController> textControllers =[];
   List<String> qrData = [];
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +59,11 @@ class _QRScanPageState extends State<QRScanPage> {
     );
   }
   void _save(){
+    List<String> qrJson = [];
+    for(int i = 0;i<qrData.length;i++){
+      qrJson.add(jsonEncode({"tag":textControllers[i].text,"qrData":qrData[i]}));
+    }
+    QRModel.saveToCache(qrJson);
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         content:Text("Data saved",style: TextStyle(color: Colors.grey[900]),)));
