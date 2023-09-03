@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:savetime/core/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class QRModel {
@@ -13,13 +14,13 @@ class QRModel {
   });
 
   String toJsonString() {
-    return jsonEncode({
+    return jsonEncode(
       {
         "qrData": qrData,
         "tag": tag,
         "datetime":dateTime.toString()
       }
-    });
+    );
   }
 
   factory QRModel.fromJsonString(String json){
@@ -57,5 +58,24 @@ class QRModel {
   static Future<void> deleteAllItemsFromCache()async{
     SharedPreferences instance = await SharedPreferences.getInstance();
     instance.remove("qrlist");
+  }
+
+  static Future<void> deleteItemByTag(String tag)async{
+    List<QRModel>? allData = await QRModel.getListFromCache();
+
+    if(allData!=null) {
+      allData.removeWhere((element) => element.tag == tag);
+      List<String> jsonData = [];
+      try{
+        for (var i in allData) {
+          CustomLogger.debug(i.qrData);
+          jsonData.add(i.toJsonString());
+        }
+      }catch(e){
+        CustomLogger.error(e);
+      }
+      await QRModel.deleteAllItemsFromCache();
+      await QRModel.saveToCache(jsonData);
+    }
   }
 }

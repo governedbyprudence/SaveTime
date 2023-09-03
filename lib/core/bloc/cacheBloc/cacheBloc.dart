@@ -12,12 +12,11 @@ class CacheBloc extends Bloc<CacheEvent,CacheState>{
 
     on<CacheGetItemsEvent>(_getItems);
     on<CacheDeleteItemEvent>(_deleteAllItems);
+    on<CacheDeleteItemByTagEvent>(_deleteItemByTag);
   }
 
   FutureOr<void> _getItems(CacheGetItemsEvent event, Emitter<CacheState> emit)async{
-    CustomLogger.debug("Getting Items");
     emit(CacheInitialState());
-    CustomLogger.debug(("Initial State Emitted"));
     try{
       List<QRModel>? data= await QRModel.getListFromCache();
       if(data==null){
@@ -35,5 +34,16 @@ class CacheBloc extends Bloc<CacheEvent,CacheState>{
     emit(CacheInitialState());
     QRModel.deleteAllItemsFromCache();
     emit(CacheItemNotPresentState());
+  }
+
+  FutureOr<void> _deleteItemByTag(CacheDeleteItemByTagEvent event,Emitter<CacheState> emit)async{
+    emit(CacheInitialState());
+    try{
+      await QRModel.deleteItemByTag(event.tag);
+      add(CacheGetItemsEvent());
+    }catch(e){
+      emit(CacheItemNotPresentState());
+    }
+
   }
 }

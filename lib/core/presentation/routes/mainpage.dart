@@ -160,10 +160,19 @@ class SingleQRTile extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(20),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const CircleAvatar(),
-                const SizedBox(width: 20,),
-                Text(qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w500),),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children:[
+                    const CircleAvatar(child: Text("Q"),),
+                    const SizedBox(width: 20,),
+                    Text(qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w500),),
+                  ],
+                ),
+                IconButton(onPressed: (){
+                    context.read<CacheBloc>().add(CacheDeleteItemByTagEvent(tag: qrModel.tag));
+                }, icon: const Icon(Icons.delete))
               ],
             ),
           ),

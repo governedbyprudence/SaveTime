@@ -12,6 +12,12 @@ class CacheGetItemsEvent extends CacheEvent {
 class CacheDeleteItemEvent extends CacheEvent {
 
 }
+
+class CacheDeleteItemByTagEvent extends CacheEvent{
+  final String tag;
+  CacheDeleteItemByTagEvent({required this.tag});
+}
+
 class CacheAddItemsEvent extends CacheEvent {
 
 }
