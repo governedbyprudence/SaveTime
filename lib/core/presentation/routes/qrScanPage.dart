@@ -17,6 +17,7 @@ class QRScanPage extends StatefulWidget {
 
 class _QRScanPageState extends State<QRScanPage> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final _formKey = GlobalKey<FormState>();
   QRViewController? qrController;
   ScrollController listScrollController = ScrollController();
   List<TextEditingController> textControllers =[];
@@ -52,7 +53,7 @@ class _QRScanPageState extends State<QRScanPage> {
           child: Column(
             children: [
              Expanded(child: _qrScanner()),
-              Expanded(child: _list())
+              Expanded(child: Form(key:_formKey,child: _list()))
             ],
           ),
         ),
@@ -60,14 +61,16 @@ class _QRScanPageState extends State<QRScanPage> {
     );
   }
   void _save(){
-    List<String> qrJson = [];
-    for(int i = 0;i<qrData.length;i++){
-      qrJson.add(jsonEncode({"tag":textControllers[i].text,"qrData":qrData[i],"datetime":dateTimeData[i]}));
+    if(_formKey.currentState!.validate()){
+      List<String> qrJson = [];
+      for(int i = 0;i<qrData.length;i++){
+        qrJson.add(jsonEncode({"tag":textControllers[i].text,"qrData":qrData[i],"datetime":dateTimeData[i]}));
+      }
+      QRModel.saveToCache(qrJson);
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          content:Text("Data saved",style: TextStyle(color: Colors.grey[900]),)));
     }
-    QRModel.saveToCache(qrJson);
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        content:Text("Data saved",style: TextStyle(color: Colors.grey[900]),)));
   }
   void _onQRViewCreated(QRViewController controller) {
     qrController = controller;
@@ -80,7 +83,7 @@ class _QRScanPageState extends State<QRScanPage> {
             dateTimeData.add(DateTime.now().toString());
             listScrollController.animateTo(
               listScrollController.position.maxScrollExtent,
-              duration: const Duration(seconds: 2),
+              duration: const Duration(seconds: 1),
               curve: Curves.fastOutSlowIn,
             );
           });
@@ -128,6 +131,7 @@ class _QRScanPageState extends State<QRScanPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              const SizedBox(height: 20,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -135,8 +139,11 @@ class _QRScanPageState extends State<QRScanPage> {
                   const SizedBox(width: 20,),
                   Expanded(
                     child: SizedBox(
-                      height: 40,
+                      height: 60,
                       child: TextFormField(
+                        validator: (text){
+                          if(text==null || text.isEmpty)return "Please enter a tag/label";
+                        },
                         controller: textControllers[index],
                         decoration: InputDecoration(
                             labelText: "Enter Label for QR",

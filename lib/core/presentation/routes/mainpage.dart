@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:savetime/core/bloc/cacheBloc/cacheBloc.dart';
 import 'package:savetime/core/bloc/cacheBloc/cacheEvent.dart';
 import 'package:savetime/core/bloc/cacheBloc/cacheState.dart';
+import 'package:savetime/core/models/qr.dart';
 import 'package:savetime/core/presentation/routes/qrScanPage.dart';
 
 class MainPage extends StatefulWidget {
@@ -31,7 +32,7 @@ class _MainPageState extends State<MainPage> {
         currentIndex: _currentIndex,
         onTap: (index){
           setState(() {
-            _currentIndex = 0;
+            _currentIndex = index;
           });
         },
         items: const [
@@ -57,6 +58,12 @@ class _QRListPageState extends State<QRListPage> {
     return BlocProvider(create: (_)=>CacheBloc()..add(CacheGetItemsEvent()),
       child: BlocConsumer<CacheBloc,CacheState>(
         builder: (context,state){
+          if(state is CacheInitialState){
+            return Container(
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator(),
+            );
+          }
           if(state is CacheItemNotPresentState){
             return Container(
               padding: const EdgeInsets.all(20),
@@ -65,7 +72,10 @@ class _QRListPageState extends State<QRListPage> {
                 style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),),
             );
           }
-          return Container(child: const Text("hehe"),);
+          List<QRModel> data = (state as CacheItemPresentState).items;
+          return ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (context,index)=>SingleQRTile(qrModel: data[index]));
         },
         listener: (context,state){
 
@@ -74,6 +84,46 @@ class _QRListPageState extends State<QRListPage> {
     );
   }
 }
+
+class SingleQRTile extends StatelessWidget {
+  final QRModel qrModel;
+  const SingleQRTile({super.key,required this.qrModel});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          boxShadow:  [
+            BoxShadow(
+                color: Colors.grey[200]!,
+                offset: const Offset(0,1),
+                spreadRadius: 2,
+                blurRadius: 3
+            )
+          ]
+      ),
+      height: 80,
+      margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+      child: Material(
+        child: InkWell(
+          onTap: (){},
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                const CircleAvatar(),
+                const SizedBox(width: 20,),
+                Text(qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w500),),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
