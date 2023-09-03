@@ -53,4 +53,9 @@ class QRModel {
     }
     return null;
   }
+
+  static Future<void> deleteAllItemsFromCache()async{
+    SharedPreferences instance = await SharedPreferences.getInstance();
+    instance.remove("qrlist");
+  }
 }

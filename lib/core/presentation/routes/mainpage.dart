@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:savetime/core/bloc/cacheBloc/cacheBloc.dart';
@@ -5,6 +6,7 @@ import 'package:savetime/core/bloc/cacheBloc/cacheEvent.dart';
 import 'package:savetime/core/bloc/cacheBloc/cacheState.dart';
 import 'package:savetime/core/models/qr.dart';
 import 'package:savetime/core/presentation/routes/qrScanPage.dart';
+import 'package:savetime/core/presentation/routes/qrViewPage.dart';
 
 class MainPage extends StatefulWidget {
   static const routeName = "/main";
@@ -20,13 +22,6 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(onPressed: (){
-              Navigator.pushNamed(context, QRScanPage.routeName);
-          }, icon: const Icon(Icons.qr_code))
-        ],
-      ),
       body: widgetList[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -53,6 +48,37 @@ class QRListPage extends StatefulWidget {
 }
 
 class _QRListPageState extends State<QRListPage> {
+
+  void _deleteAllItems(BuildContext mainContext){
+    showDialog(context: mainContext, builder: (context){
+      return Dialog(
+        child: Container(
+          height: 120,
+          padding:const EdgeInsets.all(20),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              const Text("Are you sure to delete all items ?"),
+              const SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(onPressed: (){
+                      Navigator.pop(context);
+                  }, child: const Text("Cancel")),
+                  const SizedBox(width: 20,),
+                  ElevatedButton(onPressed: (){
+                    mainContext.read<CacheBloc>().add(CacheDeleteItemEvent());
+                    Navigator.pop(context);
+                  }, child: const Text("Delete"))
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return BlocProvider(create: (_)=>CacheBloc()..add(CacheGetItemsEvent()),
@@ -65,22 +91,43 @@ class _QRListPageState extends State<QRListPage> {
             );
           }
           if(state is CacheItemNotPresentState){
-            return Container(
-              padding: const EdgeInsets.all(20),
-              alignment: Alignment.topCenter,
-              child: const Text("No QR codes saved !",
-                style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),),
+            return Scaffold(
+              appBar: AppBar(
+                actions: [
+                  IconButton(onPressed: (){
+                    Navigator.pushNamed(context, QRScanPage.routeName).then((value) => context.read<CacheBloc>().add(CacheGetItemsEvent()));
+                  }, icon: const Icon(Icons.qr_code))
+                ],
+              ),
+              body: Container(
+                padding: const EdgeInsets.all(20),
+                alignment: Alignment.topCenter,
+                child: const Text("No QR codes saved !",
+                  style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),),
+              ),
             );
           }
           List<QRModel> data = (state as CacheItemPresentState).items;
-          return ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context,index)=>SingleQRTile(qrModel: data[index]));
+          return Scaffold(
+            appBar: AppBar(
+              actions: [
+                IconButton(onPressed: (){
+                  _deleteAllItems(context);
+                }, icon: const Icon(Icons.delete)),
+                IconButton(onPressed: (){
+                  Navigator.pushNamed(context, QRScanPage.routeName).then((value) => context.read<CacheBloc>().add(CacheGetItemsEvent()));
+                }, icon: const Icon(Icons.qr_code))
+              ],
+            ),
+            body: ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context,index)=>SingleQRTile(qrModel: data[index])),
+          );
         },
         listener: (context,state){
 
-        },
-      ),
+            },
+          ),
     );
   }
 }
@@ -107,7 +154,9 @@ class SingleQRTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
       child: Material(
         child: InkWell(
-          onTap: (){},
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>QRViewPage(qrModel: qrModel)));
+          },
           child: Container(
             padding: const EdgeInsets.all(20),
             child: Row(

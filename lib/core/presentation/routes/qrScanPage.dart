@@ -60,16 +60,18 @@ class _QRScanPageState extends State<QRScanPage> {
       ),
     );
   }
-  void _save(){
+  void _save()async{
     if(_formKey.currentState!.validate()){
       List<String> qrJson = [];
       for(int i = 0;i<qrData.length;i++){
         qrJson.add(jsonEncode({"tag":textControllers[i].text,"qrData":qrData[i],"datetime":dateTimeData[i]}));
       }
-      QRModel.saveToCache(qrJson);
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          content:Text("Data saved",style: TextStyle(color: Colors.grey[900]),)));
+      await QRModel.saveToCache(qrJson);
+      if(context.mounted){
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            content:Text("Data saved",style: TextStyle(color: Colors.grey[900]),)));
+      }
     }
   }
   void _onQRViewCreated(QRViewController controller) {
