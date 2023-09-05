@@ -6,6 +6,9 @@
         android:label="savetime"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+       <meta-data
+           android:name="android.requestLegacyExternalStorage"
+           android:value="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
