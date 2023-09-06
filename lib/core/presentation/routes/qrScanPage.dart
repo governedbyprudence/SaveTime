@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:savetime/core/utils/logger.dart';
 import 'package:savetime/core/utils/sharedPreferences.dart';
+import 'package:scan/scan.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/qr.dart';
@@ -53,12 +56,48 @@ class _QRScanPageState extends State<QRScanPage> {
           child: Column(
             children: [
              Expanded(child: _qrScanner()),
+              Row(
+                children: [
+                  const Text("Want to select from gallery ?"),
+                  TextButton(onPressed: (){
+                    _loadFromGallery();
+                  }, child: const Text("Click Here"))
+                ],
+              ),
               Expanded(child: Form(key:_formKey,child: _list()))
             ],
           ),
         ),
       ),
     );
+  }
+  void _loadFromGallery()async{
+    List<XFile> images = await ImagePicker().pickMultiImage();
+
+    List<String> scannedData = [];
+    for(XFile image in images){
+      try{
+        String? data = await Scan.parse(image.path);
+        if(data!=null){
+          scannedData.add(data);
+        }
+      }catch(e){
+        CustomLogger.error(e);
+      }
+    }
+
+    setState(() {
+      for(String data in scannedData) {
+        qrData.add(data);
+        textControllers.add(TextEditingController());
+        dateTimeData.add(DateTime.now().toString());
+        listScrollController.animateTo(
+          listScrollController.position.maxScrollExtent,
+          duration: const Duration(seconds: 1),
+          curve: Curves.fastOutSlowIn,
+        );
+      }
+    });
   }
   void _save()async{
     if(_formKey.currentState!.validate()){
