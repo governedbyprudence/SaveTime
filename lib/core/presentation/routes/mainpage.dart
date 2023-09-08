@@ -27,7 +27,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: widgetList[_currentIndex],
       // bottomNavigationBar: BottomNavigationBar(
-      //   backgroundColor: Colors.grey[100],
+      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       //   elevation: 0,
       //   currentIndex: _currentIndex,
       //   onTap: (index){
@@ -110,7 +110,7 @@ class _QRListPageState extends State<QRListPage> with SingleTickerProviderStateM
           }
           if(state is CacheItemNotPresentState){
             return Scaffold(
-              backgroundColor: Colors.grey[100],
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               appBar: AppBar(
                 elevation: 0,
                 actions: [
@@ -122,9 +122,9 @@ class _QRListPageState extends State<QRListPage> with SingleTickerProviderStateM
               body: Stack(
                 children: [
                   AnimatedContainer(
-                    decoration: const BoxDecoration(
-                      color: Colors.deepOrange,
-                      borderRadius: BorderRadius.only(bottomRight: Radius.circular(200),bottomLeft: Radius.circular(200))
+                    decoration:BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: const BorderRadius.only(bottomRight: Radius.circular(200),bottomLeft: Radius.circular(200))
                     ),
                     height: _headerContainerHeight, duration: const Duration(seconds: 1),
                     curve: Curves.easeInOut,
@@ -141,23 +141,23 @@ class _QRListPageState extends State<QRListPage> with SingleTickerProviderStateM
           }
           List<QRModel> data = (state as CacheItemPresentState).items;
           return Scaffold(
-            backgroundColor: Colors.grey[100],
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: CustomScrollView(
 
               slivers: [
                 SliverAppBar(
                   floating: true,
-                  backgroundColor: Colors.grey[100],
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   centerTitle: true,
-                  title: const Text("Your saved QRs",style: TextStyle(color: Colors.deepOrange,fontSize: 14),),
+                  title:  Text("Your saved QRs",style: TextStyle(color: Theme.of(context).primaryColor,fontSize: 14),),
                   elevation: 0,
                   actions: [
                     IconButton(onPressed: (){
                       _deleteAllItems(context);
-                    }, icon: const Icon(Icons.delete,color: Colors.deepOrange,)),
+                    }, icon:  Icon(Icons.delete,color: Theme.of(context).primaryColor,)),
                     IconButton(onPressed: (){
                       Navigator.pushNamed(context, QRScanPage.routeName).then((value) => context.read<CacheBloc>().add(CacheGetItemsEvent()));
-                    },icon: const Icon(Icons.qr_code,color: Colors.deepOrange,))
+                    },icon: Icon(Icons.qr_code,color: Theme.of(context).primaryColor,))
                   ],
                 ),
                 SliverList(
@@ -190,7 +190,7 @@ class SingleQRTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
       child: Material(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.deepOrange,
+        color: Theme.of(context).primaryColor,
         child: InkWell(
 
           splashColor: Colors.black,

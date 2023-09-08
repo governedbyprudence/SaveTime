@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
             TargetPlatform.android:OpenUpwardsPageTransitionsBuilder()
           }
         ),
-        primarySwatch: Colors.deepOrange,
+        primarySwatch: Colors.deepPurple,
       ),
       initialRoute: SplashScreen.routeName,
       routes: {

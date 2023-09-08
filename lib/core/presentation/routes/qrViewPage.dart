@@ -23,11 +23,11 @@ class _QRViewPageState extends State<QRViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.grey[100],
-        iconTheme: const IconThemeData(color: Colors.deepOrange),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         actions: [
           IconButton(onPressed: (){
             _saveToGallery();
