@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:savetime/core/models/qr.dart';
 import 'package:savetime/core/utils/logger.dart';
@@ -22,7 +23,17 @@ class _QRViewPageState extends State<QRViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.grey[100],
+        iconTheme: const IconThemeData(color: Colors.deepOrange),
+        actions: [
+          IconButton(onPressed: (){
+            _saveToGallery();
+          }, icon: const Icon(Icons.save))
+        ],
+      ),
       body: Container(
           height: double.infinity,
           width: double.infinity,
@@ -52,27 +63,35 @@ class _QRViewPageState extends State<QRViewPage> {
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                  child: Text(widget.qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
-                ),
-                Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                    child: Text(widget.qrModel.dateTime.toString().substring(0,10)),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                  child: ElevatedButton(
-                    onPressed: ()async{
-                            try{
-                              await _saveToGallery();
-                              if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Saved successfully")));
-                            }catch(e){
-                              CustomLogger.error(e);
-                            }
-                    },
-                    child: const Text("Save to Gallery"),
-                  ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                   Column(
+                     children: [
+                       Container(
+                         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                         child:const Text("Tag",style:  TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
+                       ),
+                       Container(
+                         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                         child: Text(widget.qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w600,),),
+                       ),
+                     ],
+                   ),
+                    Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                          child:const  Text("Created on",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                          child: Text(DateFormat("dd MM yy").format(widget.qrModel.dateTime).toString()),
+                        ),
+                      ],
+                    )
+                  ],
                 )
               ],
             ),
@@ -87,5 +106,6 @@ class _QRViewPageState extends State<QRViewPage> {
       ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List uint8List = byteData!.buffer.asUint8List();
       await ImageGallerySaver.saveImage(uint8List);
+      if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Saved to gallery")));
   }
 }

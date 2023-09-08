@@ -131,7 +131,7 @@ class _QRScanPageState extends State<QRScanPage> {
         }
         await controller.pauseCamera();
         Future.delayed(
-          const Duration(seconds: 4),
+          const Duration(seconds: 2),
             (){
               controller.resumeCamera();
             }

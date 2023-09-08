@@ -19,7 +19,7 @@ class CacheBloc extends Bloc<CacheEvent,CacheState>{
     emit(CacheInitialState());
     try{
       List<QRModel>? data= await QRModel.getListFromCache();
-      if(data==null){
+      if(data==null || data.isEmpty){
         emit(CacheItemNotPresentState());
       }
       else{

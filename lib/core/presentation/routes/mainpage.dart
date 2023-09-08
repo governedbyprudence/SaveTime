@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:savetime/core/bloc/cacheBloc/cacheBloc.dart';
 import 'package:savetime/core/bloc/cacheBloc/cacheEvent.dart';
@@ -7,6 +8,7 @@ import 'package:savetime/core/bloc/cacheBloc/cacheState.dart';
 import 'package:savetime/core/models/qr.dart';
 import 'package:savetime/core/presentation/routes/qrScanPage.dart';
 import 'package:savetime/core/presentation/routes/qrViewPage.dart';
+import 'package:savetime/core/utils/logger.dart';
 
 class MainPage extends StatefulWidget {
   static const routeName = "/main";
@@ -23,19 +25,21 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: widgetList[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index){
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.person),label: "Person"),
-
-        ],
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   backgroundColor: Colors.grey[100],
+      //   elevation: 0,
+      //   currentIndex: _currentIndex,
+      //   onTap: (index){
+      //     setState(() {
+      //       _currentIndex = index;
+      //     });
+      //   },
+      //   items: const [
+      //     BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home"),
+      //     BottomNavigationBarItem(icon: Icon(Icons.person),label: "Person"),
+      //
+      //   ],
+      // ),
     );
   }
 }
@@ -47,8 +51,21 @@ class QRListPage extends StatefulWidget {
   State<QRListPage> createState() => _QRListPageState();
 }
 
-class _QRListPageState extends State<QRListPage> {
+class _QRListPageState extends State<QRListPage> with SingleTickerProviderStateMixin{
+  double _headerContainerHeight = 0;
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
 
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Future.delayed(const Duration(milliseconds: 100),(){
+        setState(() {
+          _headerContainerHeight = 150;
+        });
+      });
+    });
+  }
   void _deleteAllItems(BuildContext mainContext){
     showDialog(context: mainContext, builder: (context){
       return Dialog(
@@ -92,36 +109,65 @@ class _QRListPageState extends State<QRListPage> {
           }
           if(state is CacheItemNotPresentState){
             return Scaffold(
+              backgroundColor: Colors.grey[100],
               appBar: AppBar(
+                elevation: 0,
                 actions: [
                   IconButton(onPressed: (){
                     Navigator.pushNamed(context, QRScanPage.routeName).then((value) => context.read<CacheBloc>().add(CacheGetItemsEvent()));
                   }, icon: const Icon(Icons.qr_code))
                 ],
               ),
-              body: Container(
-                padding: const EdgeInsets.all(20),
-                alignment: Alignment.topCenter,
-                child: const Text("No QR codes saved !",
-                  style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),),
+              body: Stack(
+                children: [
+                  AnimatedContainer(
+                    decoration: const BoxDecoration(
+                      color: Colors.deepOrange,
+                      borderRadius: BorderRadius.only(bottomRight: Radius.circular(200),bottomLeft: Radius.circular(200))
+                    ),
+                    height: _headerContainerHeight, duration: const Duration(seconds: 1),
+                    curve: Curves.easeInOut,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    alignment: Alignment.topCenter,
+                    child: const Text("No QR codes saved !",
+                      style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: Colors.white),),
+                  ),
+                ],
               ),
             );
           }
           List<QRModel> data = (state as CacheItemPresentState).items;
           return Scaffold(
-            appBar: AppBar(
-              actions: [
-                IconButton(onPressed: (){
-                  _deleteAllItems(context);
-                }, icon: const Icon(Icons.delete)),
-                IconButton(onPressed: (){
-                  Navigator.pushNamed(context, QRScanPage.routeName).then((value) => context.read<CacheBloc>().add(CacheGetItemsEvent()));
-                }, icon: const Icon(Icons.qr_code))
+            backgroundColor: Colors.grey[100],
+            body: CustomScrollView(
+
+              slivers: [
+                SliverAppBar(
+                  floating: true,
+                  backgroundColor: Colors.grey[100],
+                  centerTitle: true,
+                  title: const Text("Your saved QRs",style: TextStyle(color: Colors.deepOrange,fontSize: 14),),
+                  elevation: 0,
+                  actions: [
+                    IconButton(onPressed: (){
+                      _deleteAllItems(context);
+                    }, icon: const Icon(Icons.delete,color: Colors.deepOrange,)),
+                    IconButton(onPressed: (){
+                      Navigator.pushNamed(context, QRScanPage.routeName).then((value) => context.read<CacheBloc>().add(CacheGetItemsEvent()));
+                    },icon: const Icon(Icons.qr_code,color: Colors.deepOrange,))
+                  ],
+                ),
+                SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                  (context,index){
+                    return SingleQRTile(qrModel: data[index]);
+                  },
+                  childCount: data.length,
+                ))
               ],
             ),
-            body: ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context,index)=>SingleQRTile(qrModel: data[index])),
           );
         },
         listener: (context,state){
@@ -139,40 +185,45 @@ class SingleQRTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          boxShadow:  [
-            BoxShadow(
-                color: Colors.grey[200]!,
-                offset: const Offset(0,1),
-                spreadRadius: 2,
-                blurRadius: 3
-            )
-          ]
-      ),
-      height: 80,
-      margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+      height: 100,
+      margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
       child: Material(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.deepOrange,
         child: InkWell(
-          onTap: (){
+
+          splashColor: Colors.black,
+            borderRadius: BorderRadius.circular(20),
+            onTap: (){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>QRViewPage(qrModel: qrModel)));
           },
           child: Container(
             padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20)
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children:[
-                    const CircleAvatar(child: Text("Q"),),
+                    const Icon(Icons.qr_code_2_outlined,color: Colors.white,size: 50,),
                     const SizedBox(width: 20,),
-                    Text(qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w500),),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w800,color: Colors.white,fontSize: 26),),
+                        const SizedBox(height: 5,),
+                        Text(qrModel.dateTime.toString().substring(0,10),style: const TextStyle(fontWeight: FontWeight.w500,fontSize: 10,color: Colors.white,),),
+                      ],
+                    )
                   ],
                 ),
                 IconButton(onPressed: (){
                     context.read<CacheBloc>().add(CacheDeleteItemByTagEvent(tag: qrModel.tag));
-                }, icon: const Icon(Icons.delete))
+                }, icon: const Icon(Icons.delete,color: Colors.white,))
               ],
             ),
           ),
