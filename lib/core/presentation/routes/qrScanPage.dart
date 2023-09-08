@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:savetime/core/themes/light_theme.dart';
 import 'package:savetime/core/utils/logger.dart';
 import 'package:savetime/core/utils/sharedPreferences.dart';
 import 'package:scan/scan.dart';
@@ -55,7 +56,9 @@ class _QRScanPageState extends State<QRScanPage> {
           width: double.infinity,
           child: Column(
             children: [
-             Expanded(child: _qrScanner()),
+             Expanded(
+                 flex: 2,
+                 child: _qrScanner()),
               Row(
                 children: [
                   const Text("Want to select from gallery ?"),
@@ -157,11 +160,11 @@ class _QRScanPageState extends State<QRScanPage> {
         itemBuilder: (context,index)=>Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: Colors.white,
-            boxShadow: const [
+            color: lightPink,
+            boxShadow:  [
               BoxShadow(
-                offset: Offset(0,1),
-                color: Colors.grey,
+                offset: const Offset(0,1),
+                color: Colors.grey[300]!,
                 spreadRadius: 1,
                 blurRadius: 1
               )

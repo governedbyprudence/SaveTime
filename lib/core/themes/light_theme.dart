@@ -8,7 +8,7 @@ final ThemeData lightTheme = ThemeData(
       }
   ),
   primaryColor: const Color(0xff00a896),
-  primaryColorDark: const Color(0xff322214),
+  primaryColorDark: const Color(0xff4a4d59),
   scaffoldBackgroundColor: const Color(0xfffddef2),
   textButtonTheme: const TextButtonThemeData(
       style: ButtonStyle(foregroundColor: MaterialStatePropertyAll(Color(0xff00a896)))
@@ -22,3 +22,5 @@ final ThemeData lightTheme = ThemeData(
   appBarTheme: const AppBarTheme(backgroundColor: Color(0xfffddef2),elevation: 0,iconTheme: IconThemeData(color:Color(0xff00a896)),titleTextStyle: TextStyle(color: Color(0xff00a896))),
   primarySwatch: Colors.green,
 );
+
+const Color lightPink = Color(0xfffceef9);

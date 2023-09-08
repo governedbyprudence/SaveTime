@@ -26,7 +26,7 @@ class _QRViewPageState extends State<QRViewPage> {
       backgroundColor: Theme.of(context).primaryColorDark,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColorDark,
-        iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
+        iconTheme: IconThemeData(color: Theme.of(context).scaffoldBackgroundColor),
         actions: [
           IconButton(onPressed: (){
             _saveToGallery();
@@ -34,7 +34,7 @@ class _QRViewPageState extends State<QRViewPage> {
         ],
       ),
       body: DefaultTextStyle(
-        style: TextStyle(color: Theme.of(context).primaryColor),
+        style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
         child: Container(
             height: double.infinity,
             width: double.infinity,
@@ -65,23 +65,20 @@ class _QRViewPageState extends State<QRViewPage> {
                     ),
                   ),
                   const SizedBox(height: 20,),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                    child:const Text("Tag",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12),),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                    child: Text(widget.qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 25),),
-                  ),
-                  const SizedBox(height: 20,),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                    child:const  Text("Created on",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12),),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                    child: Text(DateFormat("dd MMMM yy").format(widget.qrModel.dateTime),style: const TextStyle(fontSize: 20),),
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                        child: Text(widget.qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 25),),
+                      ),
+                      Text("------"),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                        child: Text(DateFormat("dd MMMM yy").format(widget.qrModel.dateTime),style: const TextStyle(fontSize: 14),),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
