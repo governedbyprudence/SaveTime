@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:savetime/core/bloc/cacheBloc/cacheBloc.dart';
 import 'package:savetime/core/bloc/cacheBloc/cacheEvent.dart';
 import 'package:savetime/core/bloc/cacheBloc/cacheState.dart';
@@ -216,7 +217,7 @@ class SingleQRTile extends StatelessWidget {
                       children: [
                         Text(qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w800,color: Colors.white,fontSize: 26),),
                         const SizedBox(height: 5,),
-                        Text(qrModel.dateTime.toString().substring(0,10),style: const TextStyle(fontWeight: FontWeight.w500,fontSize: 10,color: Colors.white,),),
+                        Text(DateFormat("dd MMMM yy").format(qrModel.dateTime),style: const TextStyle(fontWeight: FontWeight.w500,fontSize: 10,color: Colors.white,),),
                       ],
                     )
                   ],

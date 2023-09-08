@@ -87,7 +87,7 @@ class _QRViewPageState extends State<QRViewPage> {
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                          child: Text(DateFormat("dd MM yy").format(widget.qrModel.dateTime).toString()),
+                          child: Text(DateFormat("dd MMMM yy").format(widget.qrModel.dateTime).toString()),
                         ),
                       ],
                     )
