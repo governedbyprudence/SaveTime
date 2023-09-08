@@ -110,7 +110,6 @@ class _QRListPageState extends State<QRListPage> with SingleTickerProviderStateM
           }
           if(state is CacheItemNotPresentState){
             return Scaffold(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               appBar: AppBar(
                 elevation: 0,
                 actions: [
@@ -132,8 +131,8 @@ class _QRListPageState extends State<QRListPage> with SingleTickerProviderStateM
                   Container(
                     padding: const EdgeInsets.all(20),
                     alignment: Alignment.topCenter,
-                    child: const Text("No QR codes saved !",
-                      style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: Colors.white),),
+                    child: Text("No QR codes saved !",
+                      style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: Theme.of(context).scaffoldBackgroundColor),),
                   ),
                 ],
               ),
@@ -147,7 +146,6 @@ class _QRListPageState extends State<QRListPage> with SingleTickerProviderStateM
               slivers: [
                 SliverAppBar(
                   floating: true,
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   centerTitle: true,
                   title:  Text("Your saved QRs",style: TextStyle(color: Theme.of(context).primaryColor,fontSize: 14),),
                   elevation: 0,
@@ -193,7 +191,7 @@ class SingleQRTile extends StatelessWidget {
         color: Theme.of(context).primaryColor,
         child: InkWell(
 
-          splashColor: Colors.black,
+          splashColor: Theme.of(context).primaryColorDark,
             borderRadius: BorderRadius.circular(20),
             onTap: (){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>QRViewPage(qrModel: qrModel)));
@@ -209,22 +207,22 @@ class SingleQRTile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children:[
-                    const Icon(Icons.qr_code_2_outlined,color: Colors.white,size: 50,),
+                    Icon(Icons.qr_code_2_outlined,color: Theme.of(context).scaffoldBackgroundColor,size: 50,),
                     const SizedBox(width: 20,),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w800,color: Colors.white,fontSize: 26),),
+                        Text(qrModel.tag,style:  TextStyle(fontWeight: FontWeight.w800,color: Theme.of(context).scaffoldBackgroundColor,fontSize: 26),),
                         const SizedBox(height: 5,),
-                        Text(DateFormat("dd MMMM yy").format(qrModel.dateTime),style: const TextStyle(fontWeight: FontWeight.w500,fontSize: 10,color: Colors.white,),),
+                        Text(DateFormat("dd MMMM yy").format(qrModel.dateTime),style: TextStyle(fontWeight: FontWeight.w500,fontSize: 10,color: Theme.of(context).scaffoldBackgroundColor,),),
                       ],
                     )
                   ],
                 ),
                 IconButton(onPressed: (){
                     context.read<CacheBloc>().add(CacheDeleteItemByTagEvent(tag: qrModel.tag));
-                }, icon: const Icon(Icons.delete,color: Colors.white,))
+                }, icon: Icon(Icons.delete,color: Theme.of(context).scaffoldBackgroundColor,))
               ],
             ),
           ),

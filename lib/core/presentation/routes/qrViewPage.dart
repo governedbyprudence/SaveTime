@@ -23,10 +23,9 @@ class _QRViewPageState extends State<QRViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).primaryColorDark,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).primaryColorDark,
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         actions: [
           IconButton(onPressed: (){
@@ -34,69 +33,60 @@ class _QRViewPageState extends State<QRViewPage> {
           }, icon: const Icon(Icons.save))
         ],
       ),
-      body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          padding:const EdgeInsets.all(10),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RepaintBoundary(
-                  key: _imageSaveKey,
-                  child: Container(
-                    margin: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey[200]!,
-                          offset: const Offset(0,1),
-                          spreadRadius: 2,
-                          blurRadius: 3
-                        )
-                      ]
-                    ),
-                    padding: const EdgeInsets.all(20),
-                    child: QrImage(
-                      data: widget.qrModel.qrData,
+      body: DefaultTextStyle(
+        style: TextStyle(color: Theme.of(context).primaryColor),
+        child: Container(
+            height: double.infinity,
+            width: double.infinity,
+            padding:const EdgeInsets.all(10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RepaintBoundary(
+                    key: _imageSaveKey,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey[200]!,
+                            offset: const Offset(0,1),
+                            spreadRadius: 2,
+                            blurRadius: 3
+                          )
+                        ]
+                      ),
+                      padding: const EdgeInsets.all(20),
+                      child: QrImage(
+                        data: widget.qrModel.qrData,
+                      ),
                     ),
                   ),
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                   Column(
-                     children: [
-                       Container(
-                         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                         child:const Text("Tag",style:  TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
-                       ),
-                       Container(
-                         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                         child: Text(widget.qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w600,),),
-                       ),
-                     ],
-                   ),
-                    Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                          child:const  Text("Created on",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                          child: Text(DateFormat("dd MMMM yy").format(widget.qrModel.dateTime).toString()),
-                        ),
-                      ],
-                    )
-                  ],
-                )
-              ],
+                  const SizedBox(height: 20,),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                    child:const Text("Tag",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12),),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                    child: Text(widget.qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 25),),
+                  ),
+                  const SizedBox(height: 20,),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                    child:const  Text("Created on",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12),),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                    child: Text(DateFormat("dd MMMM yy").format(widget.qrModel.dateTime),style: const TextStyle(fontSize: 20),),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+      ),
     );
   }
 
