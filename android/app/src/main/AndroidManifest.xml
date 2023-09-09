@@ -5,7 +5,7 @@
    <application
         android:label="savetime"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
        <meta-data
            android:name="android.requestLegacyExternalStorage"
            android:value="true" />
