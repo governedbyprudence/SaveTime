@@ -111,6 +111,8 @@ class _QRListPageState extends State<QRListPage> with SingleTickerProviderStateM
           if(state is CacheItemNotPresentState){
             return Scaffold(
               appBar: AppBar(
+                backgroundColor: Theme.of(context).primaryColor,
+                iconTheme: const IconThemeData(color: Colors.white),
                 elevation: 0,
                 actions: [
                   IconButton(onPressed: (){

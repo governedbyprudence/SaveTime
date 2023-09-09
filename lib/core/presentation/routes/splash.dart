@@ -22,10 +22,11 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: Colors.white,
         height: double.infinity,
         width: double.infinity,
         alignment: Alignment.center,
-        child:const Icon(Icons.account_box_rounded,size: 40,),
+        child:Image.asset("assets/logo.png")
       ),
     );
   }
