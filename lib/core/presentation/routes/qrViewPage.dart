@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:savetime/core/models/qr.dart';
 import 'package:savetime/core/utils/logger.dart';
+import 'package:savetime/core/utils/notification_service.dart';
 
 class QRViewPage extends StatefulWidget {
   final QRModel qrModel;
@@ -20,6 +21,11 @@ class QRViewPage extends StatefulWidget {
 class _QRViewPageState extends State<QRViewPage> {
 
   final GlobalKey _imageSaveKey = GlobalKey();
+  @override
+  void initState() {
+    super.initState();
+    NotificationService.isAllowed();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,12 +78,34 @@ class _QRViewPageState extends State<QRViewPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
                         child: Text(widget.qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 25),),
                       ),
-                      Text("------"),
+                      const Text("------"),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
                         child: Text(DateFormat("dd MMMM yy").format(widget.qrModel.dateTime),style: const TextStyle(fontSize: 14),),
                       ),
                     ],
+                  ),
+                  GestureDetector(
+                    onTap: ()async{
+                       DateTime? date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(3000));
+                      if(date!=null){
+                        if(context.mounted){TimeOfDay? pickedTime = await showTimePicker(context: context, initialTime:TimeOfDay.now());
+                        if(pickedTime!=null){
+                              NotificationService.createScheduledNotification(DateTime(date.year,date.month,date.day,pickedTime.hour,pickedTime.minute), "Reminder for ${widget.qrModel.tag}");
+                        }
+                        }
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.all(20),
+                      child: Row(
+                        children: const [
+                          Icon(Icons.notifications,size: 40,),
+                          Text("Set a reminder",style: TextStyle(fontSize: 18),)
+                        ],
+                      ),
+                    ),
                   )
                 ],
               ),

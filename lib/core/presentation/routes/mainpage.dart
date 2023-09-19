@@ -10,6 +10,7 @@ import 'package:savetime/core/models/qr.dart';
 import 'package:savetime/core/presentation/routes/qrScanPage.dart';
 import 'package:savetime/core/presentation/routes/qrViewPage.dart';
 import 'package:savetime/core/utils/logger.dart';
+import 'package:savetime/core/utils/notification_service.dart';
 
 class MainPage extends StatefulWidget {
   static const routeName = "/main";
