@@ -5,13 +5,12 @@ import 'package:savetime/core/presentation/routes/mainpage.dart';
 import 'package:savetime/core/presentation/routes/splash.dart';
 import 'package:savetime/core/themes/light_theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import 'core/presentation/routes/qrScanPage.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   AwesomeNotifications().initialize(
-    null,
+      null,
     [
       NotificationChannel(channelKey: "basic_channel",
           channelName: "Basic notification",

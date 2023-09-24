@@ -160,8 +160,8 @@ class _QRScanPageState extends State<QRScanPage> {
         itemBuilder: (context,index)=>Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: lightPink,
-            boxShadow:  [
+            color: Colors.white,
+              boxShadow:  [
               BoxShadow(
                 offset: const Offset(0,1),
                 color: Colors.grey[300]!,

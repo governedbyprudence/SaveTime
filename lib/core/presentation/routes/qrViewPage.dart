@@ -29,9 +29,8 @@ class _QRViewPageState extends State<QRViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColorDark,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColorDark,
+        backgroundColor: Theme.of(context).primaryColor,
         iconTheme: IconThemeData(color: Theme.of(context).scaffoldBackgroundColor),
         actions: [
           IconButton(onPressed: (){
@@ -40,7 +39,7 @@ class _QRViewPageState extends State<QRViewPage> {
         ],
       ),
       body: DefaultTextStyle(
-        style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+        style: const TextStyle(color: Colors.black),
         child: Container(
             height: double.infinity,
             width: double.infinity,
@@ -70,6 +69,11 @@ class _QRViewPageState extends State<QRViewPage> {
                       ),
                     ),
                   ),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                    child: Text(DateFormat("dd MMMM yy").format(widget.qrModel.dateTime),style: const TextStyle(fontSize: 14),),
+                  ),
                   const SizedBox(height: 20,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -77,11 +81,6 @@ class _QRViewPageState extends State<QRViewPage> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
                         child: Text(widget.qrModel.tag,style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 25),),
-                      ),
-                      const Text("------"),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                        child: Text(DateFormat("dd MMMM yy").format(widget.qrModel.dateTime),style: const TextStyle(fontSize: 14),),
                       ),
                     ],
                   ),
@@ -100,9 +99,11 @@ class _QRViewPageState extends State<QRViewPage> {
                       alignment: Alignment.center,
                       margin: const EdgeInsets.all(20),
                       child: Row(
-                        children: const [
-                          Icon(Icons.notifications,size: 40,),
-                          Text("Set a reminder",style: TextStyle(fontSize: 18),)
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.notifications,size: 40,color: Theme.of(context).primaryColor,),
+                          const SizedBox(width: 20,),
+                          const Text("Set a reminder",style: TextStyle(fontSize: 18),)
                         ],
                       ),
                     ),
